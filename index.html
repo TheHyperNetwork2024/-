@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link id="favicon" rel="icon" href="https://google.com/favicon.ico" type="image/png">
+    <title>Google</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://img.freepik.com/premium-photo/abstract-dark-modern-background-design-geometric-shapes-triangles-squares-rectangles-stripe_1061358-321256.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        .alert-container {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            z-index: 9999;
+            width: 90%;
+            max-width: 400px;
+        }
+        .alert-header {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        .alert-message {
+            font-size: 1.2em;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+        .tutorial-link {
+            color: #66ccff;
+            font-size: 1em;
+            display: inline;
+            text-decoration: none;
+        }
+        .tutorial-link:hover {
+            text-decoration: underline;
+        }
+        .test-button {
+            color: #66ccff;
+            font-size: 1em;
+            cursor: pointer;
+            margin-left: 8px;
+            text-decoration: none; /* Geen onderlijning */
+        }
+        .test-button:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        let newTab;
+
+        window.onload = function() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+
+            try {
+                openNewTabWithIframe();
+            } catch (error) {
+                console.error("Er is een fout opgetreden: ", error);
+                showAlert("Fout!", "Er is een probleem opgetreden. Klik op het icoon rechts in de adresbalk en sta pop-ups toe. → <a href='https://www.youtube.com/watch?v=Y-CqgCovW4M' target='_blank' class='tutorial-link'>Tutorial</a>");
+            }
+        }
+
+        function openNewTabWithIframe() {
+            newTab = window.open("about:blank", "_blank");
+
+            if (newTab) {
+                newTab.document.write(`
+                    <!DOCTYPE html>
+                    <html lang="nl">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>about:blank</title>
+                        <style>
+                            body { 
+                                margin: 0; 
+                                padding: 0; 
+                                background-color: #1e1e1e;
+                                color: #ffffff;
+                                overflow: hidden;
+                            }
+                            iframe { 
+                                width: 100vw; 
+                                height: 100vh; 
+                                border: none; 
+                                overflow: auto;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <iframe id="iframeContent" src="testt.html" scrolling="yes"></iframe>
+                        <script>
+                            function replaceIframeContent() {
+                                var iframe = document.getElementById("iframeContent");
+                                if (iframe) {
+                                    iframe.src = "https://example.com"; // Vervang door de gewenste URL
+                                }
+                            }
+                        </` + `script>
+                    </body>
+                    </html>
+                `);
+                newTab.document.close();
+                window.location.replace("https://google.com")
+            } else {
+                showAlert("Pop-ups are blocked!", `Click on the icon in the top right of te adressbar and enable pop-ups.  -  <a href='https://www.youtube.com/watch?v=Y-CqgCovW4M' target='_blank' class='tutorial-link'>Tutorial</a> -<span class="test-button" onclick="openNewTabWithIframe()">Click here to Open</span>`);
+            }
+        }
+
+        function showAlert(title, message) {
+            const alertContainer = document.createElement('div');
+            alertContainer.className = 'alert-container';
+            alertContainer.innerHTML = `
+                <div class="alert-header">${title}</div>
+                <div class="alert-message">${message}</div>
+            `;
+            document.body.appendChild(alertContainer);
+            alertContainer.style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>
