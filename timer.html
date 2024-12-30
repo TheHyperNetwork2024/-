@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timer</title>
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3003/3003202.png" type="image/png"> <!-- Nieuwe Favicon -->
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3003/3003202.png" type="image/png">
     <style>
         body {
             margin: 0;
@@ -12,7 +12,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-image: url('https://png.pngtree.com/background/20230612/original/pngtree-river-in-an-autumn-forest-with-a-sun-coming-through-the-picture-image_3179390.jpg');
+            background-image: url('https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1hn5kvpfm17rji4l1c0gnukqsdg.jpg');
             background-size: cover;
             font-family: 'Arial', sans-serif;
         }
@@ -22,17 +22,35 @@
         }
 
         .timer {
-            color: #fff; /* Witte kleur voor de timer */
+            color: #fff;
             font-size: 5rem;
             font-weight: bold;
-            background-color: #000; /* Zwarte achtergrond voor de timer */
-            border: 10px solid rgba(105, 216, 79, 0.5);
-            border-radius: 15px; /* Hoeken afgerond */
-            padding: 40px 80px; /* Extra padding voor rechthoekige vorm */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            opacity: 0.8; /* Licht doorzichtig voor een beter effect */
-            margin-bottom: 20px;
+            background-color: #000;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 10005px rgba(0, 0, 0, 0.5);
+            opacity: 0.8;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px; /* Ruimte tussen timer en knop */
+        }
+
+        .reset-button {
+            background-color: #fff;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .reset-button:hover {
+            background-color: #ccc;
         }
     </style>
 </head>
@@ -40,66 +58,71 @@
 
     <div class="timer-container">
         <div class="timer" id="timer">
-            00:00:00
+            <span id="timeDisplay">00:01:00</span>
+            <button class="reset-button" id="resetButton">Reset</button>
         </div>
     </div>
 
-    <!-- Geluidsbestand dat afgespeeld wordt als de timer afloopt -->
     <audio id="alarmSound" src="https://www.myinstants.com/media/sounds/old-clock-ringing-short.mp3" preload="auto"></audio>
 
     <script>
         let countdown;
-        let timeRemaining = 0;
+        let timeRemaining = localStorage.getItem('timeRemaining') ? parseInt(localStorage.getItem('timeRemaining')) : 60;
+        let timerFinished = false;
+        let isReset = false;
 
         function updateTimerDisplay() {
-            const hours = Math.floor(timeRemaining / 3600);
-            const minutes = Math.floor((timeRemaining % 3600) / 60);
+            const minutes = Math.floor(timeRemaining / 60);
             const seconds = timeRemaining % 60;
-            const timerDisplay = document.getElementById('timer');
-            timerDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            document.title = timerDisplay.textContent; // Update de paginatitel
+            const timeDisplay = document.getElementById('timeDisplay');
+            timeDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.title = timeDisplay.textContent;
+            localStorage.setItem('timeRemaining', timeRemaining);
         }
 
         function startTimer() {
             if (countdown) {
-                clearInterval(countdown); // Stop eventuele bestaande timer
+                clearInterval(countdown);
             }
 
             countdown = setInterval(() => {
                 if (timeRemaining > 0) {
                     timeRemaining--;
                     updateTimerDisplay();
+                    timerFinished = false;
+                    isReset = false;
                 } else {
                     clearInterval(countdown);
-                    const alarmSound = document.getElementById('alarmSound');
-                    alarmSound.play(); // Speel het geluid af
-                    document.title = "Timer"; // Herstel paginatitel naar standaard
+                    document.getElementById('alarmSound').play();
+                    document.title = "Timer";
+                    localStorage.removeItem('timeRemaining');
+                    timerFinished = true;
+                    isReset = false;
                 }
             }, 1000);
         }
 
-        // Event listener voor klikken op de timer om tijd in te stellen
         document.getElementById('timer').addEventListener('click', () => {
-            // Vraag om de tijd in uren, minuten en seconden via alerts
-            let hoursInput = prompt("Hours:", "0");
-            hoursInput = parseInt(hoursInput) || 0;
-            if (hoursInput > 23) hoursInput = 23; // Max 24 uren
-
-            let minutesInput = prompt("Minutes:", "0");
-            minutesInput = parseInt(minutesInput) || 0;
-            if (minutesInput > 59) minutesInput = 59; // Max 59 minuten
-
-            let secondsInput = prompt("Seconds:", "0");
-            secondsInput = parseInt(secondsInput) || 0;
-            if (secondsInput > 59) secondsInput = 59; // Max 59 seconden
-
-            timeRemaining = hoursInput * 3600 + minutesInput * 60 + secondsInput;
-
-            updateTimerDisplay(); // Update de display voordat je begint
-            startTimer(); // Start de timer automatisch na het instellen
+            if (timerFinished && !isReset) {
+                timeRemaining = 60;
+                updateTimerDisplay();
+                isReset = true;
+            } else if (timerFinished && isReset) {
+                startTimer();
+            } else if (!timerFinished) {
+                startTimer();
+            }
         });
 
-        // Luister naar de Enter-toets om fullscreen in/uit te schakelen
+        document.getElementById('resetButton').addEventListener('click', (event) => {
+            event.stopPropagation(); // Voorkomt dat de timer gestart wordt bij reset
+            timeRemaining = 60;
+            timerFinished = false;
+            isReset = false;
+            updateTimerDisplay();
+            clearInterval(countdown); // Stop de timer als deze loopt
+        });
+
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
                 toggleFullScreen();
@@ -116,7 +139,6 @@
             }
         }
 
-        // Initialiseer de timer met een waarde van 0
         updateTimerDisplay();
     </script>
 

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #141414; /* Donker thema */
+            color: white; /* Witte tekstkleur */
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #3a3a3a; /* Donkere achtergrond voor de container */
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            width: 300px; /* Vaste breedte voor de container */
+        }
+        select, button {
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #555; /* Donkergrijze achtergrond voor invoerelementen */
+            color: white; /* Witte tekstkleur */
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px; /* Grotere lettergrootte */
+            transition: background-color 0.3s; /* Voor een mooie hover effect */
+        }
+        select:hover, button:hover {
+            background-color: #666; /* Iets donkerder bij hover */
+        }
+        select:focus, button:focus {
+            outline: none;
+            background-color: #777; /* Nog donkerder bij focus */
+        }
+        #willekeurigWoord {
+            margin-top: 20px;
+            font-size: 40px; /* Grotere lettergrootte voor het woord */
+            font-weight: bold; /* Vetgedrukt voor betere zichtbaarheid */
+            color: white; /* Witte kleur voor het woord */
+            display: none; /* Verborgen bij de start */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="inputArea">
+            <label for="moeilijkheidsgraad">Kies een moeilijkheidsgraad:</label>
+            <select id="moeilijkheidsgraad">
+                <option value="makkelijk">Makkelijk</option>
+                <option value="gemiddeld">Gemiddeld</option>
+                <option value="moeilijk">Moeilijk</option>
+            </select>
+            <button onclick="genereerWoord()">Genereer Woord</button>
+        </div>
+        <h2 id="willekeurigWoord"></h2>
+    </div>
+
+    <script>
+        const woorden = {
+            makkelijk: [
+                "hond", "kat", "appel", "huis", "boom", "auto", "fiets", "tafel", "stoel", "boek", "camera", "taart", "schildpad", "zon", "regenboog", "trein", "school", "pet", "pizza", "klok", "strand", "feest", "rugzak", "zee", "voetbal", "sneeuwpop", "bloem", "dierentuin", "glas", "bed", "jas", "deur", "tuin", "fiets", "schaar", "boter", "kaas", "glas", "muur", "deur", "dak", "bakker", "winkel", "kom", "beker", "taart", "mes", "vork", "lamp", "kapstok", "struik", "jas", "muts", "bal", "bank", "kast", "vis", "boot", "brug", "bloem", "blok", "appel", "peer", "ijs", "banaan", "koffer", "ster", "ruimte", "paard", "mol", "ei", "emmer", "vis", "muur", "schoen", "knop", "hand", "oog", "tand", "zon", "lucht", "ster", "pad", "raam", "geld", "boek", "kaart", "stoep", "papier", "bel", "doos", "kip", "kat", "hond", "deur", "muur", "raam", "bel", "fiets", "fles", "voet", "huis", "water", "brood", "tas", "gras", "stoel", "kop", "vork", "jas", "sok", "kist", "poort", "rol", "roos", "zeep", "lamp",
+            ],
+            gemiddeld: [
+                "kampvuur", "winkelcentrum", "wolkenkrabber", "regenjas", "zandkasteel", "avontuur", "verrekijker", "schaduw", "schilderij", "dagdroom", "picknick", "uitje", "uitdaging", "moeras", "ijskast", "geheugen", "komedie", "natuur", "spookhuis", "bergbeklimmen", "nachtmerrie", "topkok", "windmolen", "uitje", "puzzel", "schooljaar", "kalender", "regenboog", "boomgaard", "mozaïek", "avontuur", "vogelnest", "winterjas", "puzzelstuk", "museum", "strandbal", "hoorn", "wielrenner", "tuinfeest", "uitzendbureau", "schilderskwast", "zonsondergang", "boekenkast", "paraplu", "fietspad", "regenjas", "naaldboom", "doolhof", "trampoline", "klokhuis", "pantoffel", "strandwandeling", "aquarium", "kleurpotloden", "brandweerwagen", "verkeersbord", "zandstorm", "limonade", "bloemkool", "picknickkleed", "juwelier", "dennenboom", "uitkijkpost", "geluid", "kompas", "sieraad", "speurtocht", "doorgeefluik", "golven", "vakbond", "onderzeeër", "wolkenlucht", "ontspanning", "uitvinding", "theatershow", "winkelier", "balkon", "uitzicht", "mozaïek", "geheugen", "hemelvaart", "podium", "kluis", "verdieping", "boekhouding",
+            ],
+            moeilijk: [
+                "archeologie", "bewustzijn", "ruimtevaart", "telepathie", "universiteit", "compassie", "verslagenheid", "complexiteit", "intelligentie", "projectie", "analyse", "wetenschap", "symbool", "filosofie", "navigatie", "remedie", "onderzoek", "toepassing", "architectuur", "synthese", "strategie", "planologie", "ethiek", "oriëntatie", "paradox", "emotie", "definitie", "innovatie", "circulatie", "abstractie", "coördinatie", "theorie", "terminologie", "documentatie", "implicatie", "formule", "encyclopedie", "isolatie", "visie", "dialectiek", "thematiek", "fundering", "reactie", "ethiek", "reflectie", "mutatie", "objectiviteit", "subjectiviteit", "karakteristiek", "experiment", "hypothese", "beargumentering", "associatie", "meditatie", "paradigma", "rationaliteit", "retoriek", "socialisatie", "identiteit", "existentialisme", "methodologie", "synthetisch", "compositie", "conclusie", "voorspelling", "subjectivisme", "decentralisatie", "autonomie", "grondbeginselen", "oprechtheid", "causale", "moraliseren", "retorische", "radicaliteit", "evenwicht", "interpretatie", "vermogen", "patroonherkenning", "psychologie", "pedagogiek", "abstract", "algemeen",
+            ],
+        };
+
+        function genereerWoord() {
+            const moeilijkheidsgraad = document.getElementById("moeilijkheidsgraad").value;
+            const mogelijkeWoorden = woorden[moeilijkheidsgraad];
+            const randomIndex = Math.floor(Math.random() * mogelijkeWoorden.length);
+            const willekeurigWoord = mogelijkeWoorden[randomIndex];
+            
+            // Verberg de input elementen en toon het woord
+            document.getElementById("inputArea").style.display = "none";
+            document.getElementById("willekeurigWoord").innerText = willekeurigWoord;
+            document.getElementById("willekeurigWoord").style.display = "block";
+
+            // Reset alles na 3 seconden
+            setTimeout(() => {
+                document.getElementById("willekeurigWoord").style.display = "none";
+                document.getElementById("inputArea").style.display = "block";
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
