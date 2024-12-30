@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3003/3003202.png" type="image/png"> <!-- Nieuwe Favicon -->
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://png.pngtree.com/background/20230612/original/pngtree-river-in-an-autumn-forest-with-a-sun-coming-through-the-picture-image_3179390.jpg');
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .timer-container {
+            text-align: center;
+        }
+
+        .timer {
+            color: #fff; /* Witte kleur voor de timer */
+            font-size: 5rem;
+            font-weight: bold;
+            background-color: #000; /* Zwarte achtergrond voor de timer */
+            border: 10px solid rgba(105, 216, 79, 0.5);
+            border-radius: 15px; /* Hoeken afgerond */
+            padding: 40px 80px; /* Extra padding voor rechthoekige vorm */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            opacity: 0.8; /* Licht doorzichtig voor een beter effect */
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="timer-container">
+        <div class="timer" id="timer">
+            00:00:00
+        </div>
+    </div>
+
+    <!-- Geluidsbestand dat afgespeeld wordt als de timer afloopt -->
+    <audio id="alarmSound" src="https://www.myinstants.com/media/sounds/old-clock-ringing-short.mp3" preload="auto"></audio>
+
+    <script>
+        let countdown;
+        let timeRemaining = 0;
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timeRemaining / 3600);
+            const minutes = Math.floor((timeRemaining % 3600) / 60);
+            const seconds = timeRemaining % 60;
+            const timerDisplay = document.getElementById('timer');
+            timerDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.title = timerDisplay.textContent; // Update de paginatitel
+        }
+
+        function startTimer() {
+            if (countdown) {
+                clearInterval(countdown); // Stop eventuele bestaande timer
+            }
+
+            countdown = setInterval(() => {
+                if (timeRemaining > 0) {
+                    timeRemaining--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(countdown);
+                    const alarmSound = document.getElementById('alarmSound');
+                    alarmSound.play(); // Speel het geluid af
+                    document.title = "Timer"; // Herstel paginatitel naar standaard
+                }
+            }, 1000);
+        }
+
+        // Event listener voor klikken op de timer om tijd in te stellen
+        document.getElementById('timer').addEventListener('click', () => {
+            // Vraag om de tijd in uren, minuten en seconden via alerts
+            let hoursInput = prompt("Hours:", "0");
+            hoursInput = parseInt(hoursInput) || 0;
+            if (hoursInput > 23) hoursInput = 23; // Max 24 uren
+
+            let minutesInput = prompt("Minutes:", "0");
+            minutesInput = parseInt(minutesInput) || 0;
+            if (minutesInput > 59) minutesInput = 59; // Max 59 minuten
+
+            let secondsInput = prompt("Seconds:", "0");
+            secondsInput = parseInt(secondsInput) || 0;
+            if (secondsInput > 59) secondsInput = 59; // Max 59 seconden
+
+            timeRemaining = hoursInput * 3600 + minutesInput * 60 + secondsInput;
+
+            updateTimerDisplay(); // Update de display voordat je begint
+            startTimer(); // Start de timer automatisch na het instellen
+        });
+
+        // Luister naar de Enter-toets om fullscreen in/uit te schakelen
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                toggleFullScreen();
+            }
+        });
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Initialiseer de timer met een waarde van 0
+        updateTimerDisplay();
+    </script>
+
+</body>
+</html>
