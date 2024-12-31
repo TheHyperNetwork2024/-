@@ -845,6 +845,56 @@ function goBack() {
                 hidePage(); // Hide the page
             }
         }
+        let loadedImages = 0; // Teller voor geladen afbeeldingen
+const totalImages = games.length; // Totaal aantal afbeeldingen
+
+function initializeGames() {
+    const gamesList = document.getElementById('games-list');
+    games.forEach(game => {
+        const gameCard = document.createElement('div');
+        gameCard.className = 'game-card';
+        gameCard.dataset.tag = game.tag;
+        gameCard.onclick = () => openGame(game.link);
+
+        const img = document.createElement('img');
+        img.src = game.imgUrl;
+        img.alt = game.title;
+
+        // Voeg een event listener toe voor het laden van de afbeelding
+        img.onload = () => {
+            loadedImages++; // Verhoog de teller voor geladen afbeeldingen
+            checkAllImagesLoaded(); // Controleer of alle afbeeldingen zijn geladen
+        };
+
+        const title = document.createElement('div');
+        title.className = 'game-title';
+        title.textContent = game.title.length > 22 ? game.title.slice(0, 20) + '..' : game.title;
+
+        gameCard.appendChild(img);
+        gameCard.appendChild(title);
+        gamesList.appendChild(gameCard);
+    });
+}
+
+function checkAllImagesLoaded() {
+    if (loadedImages === totalImages) {
+        console.log('Alle afbeeldingen zijn geladen.');
+    } else {
+        console.log(`Gelaagd: ${loadedImages} van ${totalImages} afbeeldingen.`);
+    }
+}
+
+// Functie om de pagina te herladen als niet alle afbeeldingen zijn geladen
+function reloadIfNotAllLoaded() {
+    if (loadedImages < totalImages) {
+        console.log('Niet alle afbeeldingen zijn geladen. De pagina wordt herladen...');
+        location.reload(); // Herlaad de pagina
+    }
+}
+
+// Stel een timer in om de controle uit te voeren na een bepaalde tijd
+setTimeout(reloadIfNotAllLoaded, 5000); // Controleer na 5 seconden
+
 
         function filterGames(category) {
             const gameCards = document.querySelectorAll('.game-card');
@@ -890,6 +940,10 @@ function goBack() {
         gamesList.appendChild(gameCard);
     });
 }
+        const proxyUrl = 'https://api.codetabs.com/v1/proxy/?quest=';
+games.forEach(game => {
+    game.imgUrl = proxyUrl + encodeURIComponent(game.imgUrl);
+});
 
 
 
