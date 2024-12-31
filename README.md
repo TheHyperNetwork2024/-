@@ -22,7 +22,7 @@ Want to help make The Hyper Network even better? You can:
 
 ## ⚙️ Technologies Used
 - **HTML5**: For building the structure of the website.
-- **CSS3**: For a responsive and eye-catching design.
+- **CSS**: For a responsive and eye-catching design.
 - **JavaScript**: To bring the games to life and make them interactive.
 
 ## 📧 Contact
