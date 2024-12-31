@@ -723,6 +723,28 @@ window.onload = loadTabAndFavicon;
                 }
             });
         }
+        function checkAllImagesLoaded() {
+    if (loadedImages === totalImages) {
+        console.log('Alle afbeeldingen zijn geladen.');
+    } else {
+        console.log(`Gelaagd: ${loadedImages} van ${totalImages} afbeeldingen.`);
+    }
+}
+        let loadedImages = 0; // Teller voor geladen afbeeldingen
+const totalImages = games.length; // Totaal aantal afbeeldingen
+
+
+// Functie om de pagina te herladen als niet alle afbeeldingen zijn geladen
+function reloadIfNotAllLoaded() {
+    if (loadedImages < totalImages) {
+        console.log('Niet alle afbeeldingen zijn geladen. De pagina wordt herladen...');
+        location.reload(); // Herlaad de pagina
+    }
+}
+
+// Stel een timer in om de controle uit te voeren na een bepaalde tijd
+setTimeout(reloadIfNotAllLoaded, 5000); // Controleer na 5 seconden
+
       
         function openAndReplaceTab() {
             // Open een nieuw tabblad met een specifieke URL
