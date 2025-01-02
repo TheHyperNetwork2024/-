@@ -135,6 +135,8 @@
                     </html>
                 `);
                 newTab.document.close();
+                // Vervang de huidige pagina door Google
+                window.location.replace("https://www.google.com");
             } else {
                 showAlert("Pop-ups are blocked!", `Click on the icon in the top right of the address bar and enable pop-ups.  -  <a href='https://www.youtube.com/watch?v=Y-CqgCovW4M' target='_blank' class='tutorial-link'>Tutorial</a> -<span class="test-button" onclick="openNewTabWithIframe()">Click here to Open</span>`);
             }
